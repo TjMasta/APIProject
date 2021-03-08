@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Our simple HTTP server</title>
+  <title>To Do Weekly</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
@@ -13,28 +13,33 @@ const handleResponse = (xhr, parseResponse) => {
     switch(xhr.status)
     {
         case 200:
-            content.innerHTML = '<b>Success!</b>';
             break;
         case 201:
-            content.innerHTML = '<b>Created!</b>';
             break;
         case 204:
-            content.innerHTML = '<b>Updated! (No Content)</b>';
             break;
         case 400:
-            content.innerHTML = '<b>Bad Request :(</b>';
             break;
         case 404:
-            content.innerHTML = '<b>Resource Not Found :(</b>';
             break;
         default:
-            content.innerHTML = '<p>Error code not implemented by client! :(</p>';
             break;
     }
     
+    if(parseResponse)
+    {
+        if(xhr.status === 204)
+            return;
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+    }
+    else
+    {
+        content.innerHTML += '<p>Meta Data Received</p>';
+    }
 };
 
-const requestUpdate = (e, userForm) => {
+const requestCalendar = (e, userForm) => {
     const url = userForm.querySelector('#urlField').value;
     const method = userForm.querySelector('#methodSelect').value;
     
@@ -58,14 +63,21 @@ const requestUpdate = (e, userForm) => {
     return false;
 };
 
-const sendPost = (e, nameForm) => {
+const sendPost = (e, addForm) => {
     e.preventDefault();
     
-    const nameAction = nameForm.getAttribute('action');
-    const nameMethod = nameForm.getAttribute('method');
+    const nameAction = addForm.getAttribute('action');
+    const nameMethod = addForm.getAttribute('method');
     
-    const nameField = nameForm.querySelector('#nameField');
-    const ageField = nameForm.querySelector('#ageField');
+    const nameField = addForm.querySelector('#nameField');
+    const passField = addForm.querySelector('#passField');
+    const sunField = addForm.querySelector('#sunday');
+    const monField = addForm.querySelector('#monday');
+    const tueField = addForm.querySelector('#tuesday');
+    const wedField = addForm.querySelector('#wednesday');
+    const thruField = addForm.querySelector('#thrusday');
+    const friField = addForm.querySelector('#friday');
+    const satField = addForm.querySelector('#saturday');
     
     const xhr = new XMLHttpRequest();
     xhr.open(nameMethod, nameAction);
@@ -75,21 +87,23 @@ const sendPost = (e, nameForm) => {
     
     xhr.onload = () => handleResponse(xhr, true);
     
-    const formData = `name=${nameField.value}&age=${ageField.value}`;
+    const formData = `name=${nameField.value}&password=${passField.value}`;
+    // &sunday=${sunField.value}&monday=${monField.value}&tuesday=${tueField.value}&wednesday=${wedField.value}&thrusday=${thruField.value}&friday=${friField.value}&saturday=${satField.value}
+    console.log(formData);
     xhr.send(formData);
     
     return false;
 };
 
 const init = () => {
-    const nameForm = document.querySelector('#nameForm');
-    const userForm = document.querySelector('#userForm');
+    const viewForm = document.querySelector('#viewCalendars');
+    const addForm = document.querySelector('#createCalendar');
     
-    const addUser = (e) => sendPost(e, nameForm);
-    const getUsers = (e) => requestUpdate(e, userForm);
+    const getCalendar = (e) => requestCalendar(e, viewForm);
+    const addCalendar = (e) => sendPost(e, addForm);
     
-    userForm.addEventListener('submit', getUsers);
-    nameForm.addEventListener('submit', addUser);
+    addForm.addEventListener('submit', addCalendar);
+    viewForm.addEventListener('submit', getCalendar);
 };
 
 window.onload = init;
@@ -97,14 +111,46 @@ window.onload = init;
 </head>
 <body>
   <section id="top">
-    <h3>Pokemon Team Builder</h3>
-    <form id="viewTeams" action="/viewTeams" method="get">
-      <label for="view">View Teams</label>
-      <input type="submit" value="Add User" />
+    <h3>Weekly Calendar Builder</h3>
+    <form id="viewCalendars" action="/viewCalendar" method="get">
+        <label for="name">Name: </label>
+        <input id="nameField" type="text" name="name" />
+        <label for="password">Password: </label>
+        <input id="passField" type="text" name="password" />
+      <label for="view">View Weekly Calendars</label>
+      <input type="submit" value="View" />
     </form>
-    <form id="createTeam" action="/createTeam" method="get">
-        <label for="create">Create Team</label>
-      <input type="submit" value="Get User" />
+      <br>
+      
+    <form id="createCalendar" action="/createCalendar" method="post">
+        <label for="name">Name: </label>
+        <input id="nameField" type="text" name="name" />
+        <label for="password">Password: </label>
+        <input id="passField" type="text" name="password" />
+        <br>
+        <p>To Do</p>
+            <label for="sunday">Sunday: </label>
+            <input id="sunday" type="text" name="sunday" />
+            
+            <label for="monday">Monday: </label>
+            <input id="monday" type="text" name="monday" />
+            
+            <label for="tuesday">Tuesday: </label>
+            <input id="tuesday" type="text" name="tuesday" />
+            
+            <label for="wednesday">Wednesday: </label>
+            <input id="wednesday" type="text" name="wednesday" />
+            
+            <label for="thursday">Thursday: </label>
+            <input id="thursday" type="text" name="thursday" />
+            
+            <label for="friday">Friday: </label>
+            <input id="friday" type="text" name="friday" />
+            
+            <label for="sunday">Sunday: </label>
+            <input id="sunday" type="text" name="sunday" />
+        <label for="create">Create Weekly Calendar</label>
+      <input type="submit" value="Add" />
     </form>
   </section>
   <section id="content">
