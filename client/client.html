@@ -35,13 +35,13 @@ const handleResponse = (xhr, parseResponse) => {
     }
     else
     {
-        content.innerHTML += '<p>Meta Data Received</p>';
+        console.log("Meta data");
     }
 };
 
 const requestCalendar = (e, userForm) => {
-    const url = userForm.querySelector('#urlField').value;
-    const method = userForm.querySelector('#methodSelect').value;
+    const url = userForm.getAttribute('action');
+    const method = userForm.getAttribute('method');
     
     const xhr = new XMLHttpRequest();
     xhr.open(method, url);
@@ -71,11 +71,12 @@ const sendPost = (e, addForm) => {
     
     const nameField = addForm.querySelector('#nameField');
     const passField = addForm.querySelector('#passField');
+    
     const sunField = addForm.querySelector('#sunday');
     const monField = addForm.querySelector('#monday');
     const tueField = addForm.querySelector('#tuesday');
     const wedField = addForm.querySelector('#wednesday');
-    const thruField = addForm.querySelector('#thrusday');
+    const thruField = addForm.querySelector('#thursday');
     const friField = addForm.querySelector('#friday');
     const satField = addForm.querySelector('#saturday');
     
@@ -87,8 +88,8 @@ const sendPost = (e, addForm) => {
     
     xhr.onload = () => handleResponse(xhr, true);
     
-    const formData = `name=${nameField.value}&password=${passField.value}`;
-    // &sunday=${sunField.value}&monday=${monField.value}&tuesday=${tueField.value}&wednesday=${wedField.value}&thrusday=${thruField.value}&friday=${friField.value}&saturday=${satField.value}
+    const formData = `name=${nameField.value}&password=${passField.value}&sunday=${sunField.value}&monday=${monField.value}&tuesday=${tueField.value}&wednesday=${wedField.value}&thrusday=${thruField.value}&friday=${friField.value}&saturday=${satField.value}`;
+    // 
     console.log(formData);
     xhr.send(formData);
     
@@ -147,8 +148,8 @@ window.onload = init;
             <label for="friday">Friday: </label>
             <input id="friday" type="text" name="friday" />
             
-            <label for="sunday">Sunday: </label>
-            <input id="sunday" type="text" name="sunday" />
+            <label for="saturday">Saturday: </label>
+            <input id="saturday" type="text" name="saturday" />
         <label for="create">Create Weekly Calendar</label>
       <input type="submit" value="Add" />
     </form>

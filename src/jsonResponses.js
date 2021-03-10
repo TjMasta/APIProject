@@ -24,8 +24,11 @@ const getCalendars = (request, response, params) => {
     message: 'Name and/or password is incorrect',
   };
 
-  if (calen[params.name] != null && calen[params.name] === params.password) {
+  if (calen[params.name] != null && calen[params.name].password === params.password) {
     console.log('success');
+      responseJSON.message = 'Success';
+      responseJSON.data = calen[params.name];
+      return respondJSON(request, response, 200, responseJSON);
   }
 
   return respondJSON(request, response, 200, responseJSON);
@@ -38,7 +41,8 @@ const addCalendar = (request, response, body) => {
     message: 'Name and password is required',
   };
 
-  if (!body.name || !body.pass) {
+    console.log(body.name);
+  if (!body.name || !body.password) {
     responseJSON.id = 'missingParams';
     return respondJSON(request, response, 400, responseJSON);
   }

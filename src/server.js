@@ -3,7 +3,6 @@ const url = require('url');
 const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
-// const calendar = require('./pokemonStorage');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -12,7 +11,7 @@ const handlePost = (request, response, parsedUrl) => {
     const body = [];
 
     request.on('error', (err) => {
-      console.dir(err);
+      console.log(err);
       response.statusCode = 400;
       response.end();
     });
@@ -23,7 +22,8 @@ const handlePost = (request, response, parsedUrl) => {
 
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
-      const bodyParams = query.parse(bodyString);
+      let bodyParams = query.parse(bodyString);
+        //bodyParams = JSON.stringify(bodyParams);
 
       jsonHandler.addCalendar(request, response, bodyParams);
     });
