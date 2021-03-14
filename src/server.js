@@ -23,7 +23,6 @@ const handlePost = (request, response, parsedUrl) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       let bodyParams = query.parse(bodyString);
-        //bodyParams = JSON.stringify(bodyParams);
 
       jsonHandler.addCalendar(request, response, bodyParams);
     });

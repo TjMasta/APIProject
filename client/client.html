@@ -13,6 +13,16 @@ const handleResponse = (xhr, parseResponse) => {
     switch(xhr.status)
     {
         case 200:
+            if(parseResponse)
+            {
+                const obj = JSON.parse(xhr.response);
+                let weekData = obj.data.week;
+                let d = new Date();
+
+                content.querySelector("#nameHere").innerHTML = obj.data.name;
+                content.querySelector("#today").innerHTML = "To Do Today: " + weekData[d.getDay()];
+                content.querySelector("#week").innerHTML = `<p><b>Sunday: </b>${weekData[0]}<br><b>Monday: </b>${weekData[1]}<br><b>Tuesday: </b>${weekData[2]}<br><b>Wednesday: </b>${weekData[3]}<br><b>Thrusday: </b>${weekData[4]}<br><b>Friday: </b>${weekData[5]}<br><b>Saturday: </b>${weekData[6]}</p>`;
+            }
             break;
         case 201:
             break;
@@ -31,7 +41,6 @@ const handleResponse = (xhr, parseResponse) => {
         if(xhr.status === 204)
             return;
         const obj = JSON.parse(xhr.response);
-        console.dir(obj);
     }
     else
     {
@@ -40,7 +49,12 @@ const handleResponse = (xhr, parseResponse) => {
 };
 
 const requestCalendar = (e, userForm) => {
-    const url = userForm.getAttribute('action');
+    e.preventDefault();
+    
+    const nameField = userForm.querySelector('#nameField');
+    const passField = userForm.querySelector('#passField');
+    
+    const url = userForm.getAttribute('action') + `?name=${nameField.value}&password=${passField.value}`;
     const method = userForm.getAttribute('method');
     
     const xhr = new XMLHttpRequest();
@@ -59,7 +73,6 @@ const requestCalendar = (e, userForm) => {
     
     xhr.send();
     
-    e.preventDefault();
     return false;
 };
 
@@ -89,8 +102,6 @@ const sendPost = (e, addForm) => {
     xhr.onload = () => handleResponse(xhr, true);
     
     const formData = `name=${nameField.value}&password=${passField.value}&sunday=${sunField.value}&monday=${monField.value}&tuesday=${tueField.value}&wednesday=${wedField.value}&thrusday=${thruField.value}&friday=${friField.value}&saturday=${satField.value}`;
-    // 
-    console.log(formData);
     xhr.send(formData);
     
     return false;
@@ -123,13 +134,13 @@ window.onload = init;
     </form>
       <br>
       
+    <p>To Do</p>
     <form id="createCalendar" action="/createCalendar" method="post">
         <label for="name">Name: </label>
         <input id="nameField" type="text" name="name" />
         <label for="password">Password: </label>
         <input id="passField" type="text" name="password" />
-        <br>
-        <p>To Do</p>
+        <div id="weekInput">
             <label for="sunday">Sunday: </label>
             <input id="sunday" type="text" name="sunday" />
             
@@ -150,11 +161,17 @@ window.onload = init;
             
             <label for="saturday">Saturday: </label>
             <input id="saturday" type="text" name="saturday" />
+        </div>
         <label for="create">Create Weekly Calendar</label>
       <input type="submit" value="Add" />
     </form>
   </section>
   <section id="content">
+      <h1 id="nameHere"></h1>
+      <div id="today"></div>
+      <div id="week"></div>
+      <button id="backButton">Back</button>
+      
   </section>
 </body>
 </html>

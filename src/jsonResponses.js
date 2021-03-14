@@ -28,6 +28,7 @@ const getCalendars = (request, response, params) => {
     console.log('success');
       responseJSON.message = 'Success';
       responseJSON.data = calen[params.name];
+      console.log(responseJSON.data);
       return respondJSON(request, response, 200, responseJSON);
   }
 
@@ -41,7 +42,6 @@ const addCalendar = (request, response, body) => {
     message: 'Name and password is required',
   };
 
-    console.log(body.name);
   if (!body.name || !body.password) {
     responseJSON.id = 'missingParams';
     return respondJSON(request, response, 400, responseJSON);
@@ -49,25 +49,35 @@ const addCalendar = (request, response, body) => {
 
   let responseCode = 201;
 
-  if (calen[body.name]) {
-    responseCode = 204;
-  } else {
+    if(calen[body.name] != null && calen[body.name].password === body.password)
+    {
+        responseCode = 204;
+        calen[body.name].week = {
+            0: body.sunday,
+            1: body.monday,
+            2: body.tuesday,
+            3: body.wednesday,
+            4: body.thrusday,
+            5: body.friday,
+            6: body.saturday,
+        };
+        
+        
+    }
+    
     calen[body.name] = {};
-  }
-
-  calen[body.name].name = body.name;
-  calen[body.name].password = body.password;
+    calen[body.name].name = body.name;
+    calen[body.name].password = body.password;
 
   calen[body.name].week = {
-    sunday: body.sunday,
-    monday: body.monday,
-    tuesday: body.tuesday,
-    wednesday: body.wednesday,
-    thrusday: body.thrusday,
-    friday: body.friday,
-    saturday: body.saturday,
+    0: body.sunday,
+    1: body.monday,
+    2: body.tuesday,
+    3: body.wednesday,
+    4: body.thrusday,
+    5: body.friday,
+    6: body.saturday,
   };
-  console.log(calen);
 
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';
