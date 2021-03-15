@@ -16,7 +16,6 @@ const handleResponse = (xhr, parseResponse) => {
     switch(xhr.status)
     {
         case 200:
-            responseText.innerHTML = 'Success';
             break;
         case 201:
             responseText.innerHTML = 'New Calendar Successfully Created';
@@ -165,9 +164,9 @@ window.onload = init;
       
     
     <form id="createCalendar" action="/createCalendar" method="post">
-        <h1>Make A New Calendar</h1>
+        <h1>Make A New To Do List/Update your existing To Do List</h1>
         <h2>How to Use</h2>
-        <p>Put in a name and a password. Then fill in the blanks with what you need to do this week</p>
+        <p>Put in a name and a password. Then fill in the blanks with what you need to do this week.</p>
         <label for="name">Name: </label>
         <input id="nameField" type="text" name="name" />
         <br>
@@ -203,8 +202,7 @@ window.onload = init;
             <input id="saturday" type="text" name="saturday" />
             <br>
         </div>
-        <label for="create">Create Weekly Calendar</label>
-      <input type="submit" value="Add" />
+      <input type="submit" value="Create/Update Weekly To Do List" />
     </form>
       <p id="response"></p>
   </section>
