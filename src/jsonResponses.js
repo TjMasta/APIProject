@@ -25,14 +25,13 @@ const getCalendars = (request, response, params) => {
   };
 
   if (calen[params.name] != null && calen[params.name].password === params.password) {
-    console.log('success');
-      responseJSON.message = 'Success';
-      responseJSON.data = calen[params.name];
-      console.log(responseJSON.data);
-      return respondJSON(request, response, 200, responseJSON);
+    responseJSON.message = 'Success';
+    responseJSON.data = calen[params.name];
+    return respondJSON(request, response, 200, responseJSON);
   }
 
-  return respondJSON(request, response, 200, responseJSON);
+    responseJSON.id = 'unAuthorized';
+  return respondJSON(request, response, 401, responseJSON);
 };
 
 const getCalendarsMeta = (request, response) => { respondJSONMeta(request, response, 200); };
@@ -49,25 +48,24 @@ const addCalendar = (request, response, body) => {
 
   let responseCode = 201;
 
-    if(calen[body.name] != null && calen[body.name].password === body.password)
-    {
-        responseCode = 204;
-        calen[body.name].week = {
-            0: body.sunday,
-            1: body.monday,
-            2: body.tuesday,
-            3: body.wednesday,
-            4: body.thrusday,
-            5: body.friday,
-            6: body.saturday,
-        };
-        
-        
-    }
-    
-    calen[body.name] = {};
-    calen[body.name].name = body.name;
-    calen[body.name].password = body.password;
+  if (calen[body.name] != null && calen[body.name].password === body.password) {
+    responseCode = 204;
+    calen[body.name].week = {
+      0: body.sunday,
+      1: body.monday,
+      2: body.tuesday,
+      3: body.wednesday,
+      4: body.thrusday,
+      5: body.friday,
+      6: body.saturday,
+    };
+    responseJSON.message = 'Successfully Updated Callendar';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+
+  calen[body.name] = {};
+  calen[body.name].name = body.name;
+  calen[body.name].password = body.password;
 
   calen[body.name].week = {
     0: body.sunday,
@@ -80,7 +78,7 @@ const addCalendar = (request, response, body) => {
   };
 
   if (responseCode === 201) {
-    responseJSON.message = 'Created Successfully';
+    responseJSON.message = 'New Calendar Successfully Created';
     return respondJSON(request, response, responseCode, responseJSON);
   }
 
